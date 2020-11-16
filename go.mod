@@ -21,7 +21,9 @@ require (
 	github.com/coreos/go-etcd v2.0.0+incompatible
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f
-	github.com/crewjam/saml v0.0.0-20190521120225-344d075952c9
+	github.com/crewjam/saml v0.4.4-0.20201214083806-0dd2422c212e
+	github.com/dexidp/dex v0.0.0-20201118094123-6ca0cbc85759
+	github.com/dexidp/dex/api/v2 v2.0.0
 	github.com/dlclark/regexp2 v1.2.0 // indirect
 	github.com/docker/go-units v0.4.0
 	github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c // indirect
@@ -58,6 +60,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lib/pq v1.3.0
 	github.com/lunixbochs/vtclean v1.0.0 // indirect
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mattn/go-tty v0.0.3 // indirect
 	github.com/minio/cli v1.20.0 // indirect
 	github.com/minio/minio-go/v6 v6.0.55
@@ -74,7 +77,6 @@ require (
 	github.com/prometheus/client_model v0.2.0
 	github.com/prometheus/common v0.9.1
 	github.com/robfig/cron v1.2.0
-	github.com/russellhaering/goxmldsig v0.0.0-20180430223755-7acd5e4a6ef7 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/segmentio/analytics-go v0.0.0-20160426181448-2d840d861c32
@@ -89,14 +91,15 @@ require (
 	github.com/willf/bloom v2.0.3+incompatible
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
 	github.com/xtgo/uuid v0.0.0-20140804021211-a0b114877d4c // indirect
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/crypto v0.0.0-20201208171446-5f87f3452ae9
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
 	golang.org/x/sys v0.0.0-20201116194326-cc9327a14d48
-	golang.org/x/tools v0.0.0-20201221201019-196535612888 // indirect
-	google.golang.org/api v0.14.0
+	golang.org/x/term v0.0.0-20201117132131-f5c789dd3221
+	golang.org/x/tools v0.0.0-20210104081019-d8d6ddbec6ee // indirect
+	google.golang.org/api v0.15.0
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/grpc v1.27.0
 	gopkg.in/go-playground/webhooks.v5 v5.11.0
