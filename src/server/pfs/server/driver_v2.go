@@ -82,14 +82,6 @@ func newDriverV2(env *serviceenv.ServiceEnv, txnEnv *txnenv.TransactionEnv, etcd
 }
 
 func newDB() (db *sqlx.DB, retErr error) {
-	defer func() {
-		if db != nil {
-			db.MustExec(`DROP SCHEMA IF EXISTS storage CASCADE`)
-			fileset.SetupPostgresStore(db)
-			chunk.SetupPostgresStore(db)
-			track.SetupPostgresTracker(db)
-		}
-	}()
 	postgresHost, ok := os.LookupEnv("POSTGRES_SERVICE_HOST")
 	if !ok {
 		// TODO: Probably not the right long term approach here, but this is necessary to handle the mock pachd instance used in tests.
