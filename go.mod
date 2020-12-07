@@ -97,6 +97,7 @@ require (
 	gopkg.in/pachyderm/yaml.v3 v3.0.0-20200130061037-1dd3d7bd0850
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/src-d/go-git.v4 v4.12.0
+	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.1.2
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 	k8s.io/api v0.17.4
@@ -108,7 +109,7 @@ require (
 	sigs.k8s.io/yaml v1.1.0
 )
 
-// Holy shit, the docker library versions are a clusterfuck, see https://github.com/moby/moby/issues/39302
+// Wow, the docker library versions are less than ideal, see https://github.com/moby/moby/issues/39302
 // For the moment, the windows build requires a fix that has not been tagged with an official release
 replace github.com/docker/docker => github.com/docker/docker v1.4.2-0.20191213113251-3452f136aa68
 
