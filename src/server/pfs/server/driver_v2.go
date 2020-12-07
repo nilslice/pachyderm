@@ -22,6 +22,7 @@ import (
 	col "github.com/pachyderm/pachyderm/src/server/pkg/collection"
 	"github.com/pachyderm/pachyderm/src/server/pkg/dbutil"
 	"github.com/pachyderm/pachyderm/src/server/pkg/hashtree"
+	"github.com/pachyderm/pachyderm/src/server/pkg/migrations"
 	"github.com/pachyderm/pachyderm/src/server/pkg/serviceenv"
 	"github.com/pachyderm/pachyderm/src/server/pkg/storage/chunk"
 	"github.com/pachyderm/pachyderm/src/server/pkg/storage/fileset"
@@ -76,8 +77,11 @@ func newDriverV2(env *serviceenv.ServiceEnv, txnEnv *txnenv.TransactionEnv, etcd
 	if err != nil {
 		return nil, err
 	}
-	go d2.master(env)
+	go d2.master(env, db)
 	go d2.compactionWorker()
+	if err := migrations.BlockUntil(context.TODO(), db, desiredClusterState); err != nil {
+		return nil, err
+	}
 	return d2, nil
 }
 
