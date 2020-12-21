@@ -308,7 +308,7 @@ func (a *apiServer) DeleteBranch(ctx context.Context, request *pfs.DeleteBranchR
 	return &types.Empty{}, nil
 }
 
-func (a *apiServer) FileOperation(server pfs.API_FileOperationServer) (retErr error) {
+func (a *apiServer) CreateFileset(server pfs.API_CreateFilesetServer) (retErr error) {
 	request, err := server.Recv()
 	func() { a.Log(request, nil, nil, 0) }()
 	defer func(start time.Time) { a.Log(request, nil, retErr, time.Since(start)) }(time.Now())
@@ -317,7 +317,7 @@ func (a *apiServer) FileOperation(server pfs.API_FileOperationServer) (retErr er
 			return 0, err
 		}
 		var bytesRead int64
-		if err := a.driver.fileOperation(a.env.GetPachClient(server.Context()), request.Commit, func(uw *fileset.UnorderedWriter) error {
+		filesetID, err := a.driver.createFileset(server.Context(), func(uw *fileset.UnorderedWriter) error {
 			for {
 				request, err := server.Recv()
 				if err != nil {
@@ -340,11 +340,31 @@ func (a *apiServer) FileOperation(server pfs.API_FileOperationServer) (retErr er
 					}
 				}
 			}
-		}); err != nil {
+		})
+		if err != nil {
 			return bytesRead, err
 		}
-		return bytesRead, server.SendAndClose(&types.Empty{})
+		return bytesRead, server.SendAndClose(&pfs.CreateFilesetResponse{
+			FilesetId: filesetID,
+		})
 	})
+}
+
+func (a *apiServer) AddFileset(ctx context.Context, req *pfs.AddFilesetRequest) (*types.Empty, error) {
+	if err := a.driver.addFileset(ctx, req.Commit, req.FilesetId); err != nil {
+		return nil, err
+	}
+	return &types.Empty{}, nil
+}
+
+func (a *apiServer) GetFileset(ctx context.Context, req *pfs.GetFilesetRequest) (*pfs.CreateFilesetResponse, error) {
+	filesetID, err := a.driver.getFileset(a.env.GetPachClient(ctx), req.Commit)
+	if err != nil {
+		return nil, err
+	}
+	return &pfs.CreateFilesetResponse{
+		FilesetId: filesetID,
+	}, nil
 }
 
 type fileOpSource interface {
@@ -518,15 +538,15 @@ func (a *apiServer) Fsck(request *pfs.FsckRequest, fsckServer pfs.API_FsckServer
 }
 
 // CreateFileset implements the pfs.CreateFileset RPC
-func (a *apiServer) CreateFileset(server pfs.API_CreateFilesetServer) error {
-	fsID, err := a.driver.createFileset(server)
-	if err != nil {
-		return err
-	}
-	return server.SendAndClose(&pfs.CreateFilesetResponse{
-		FilesetId: fsID,
-	})
-}
+// func (a *apiServer) CreateFileset(server pfs.API_CreateFilesetServer) error {
+// 	fsID, err := a.driver.createFileset(server)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return server.SendAndClose(&pfs.CreateFilesetResponse{
+// 		FilesetId: fsID,
+// 	})
+// }
 
 // RenewFileset implements the pfs.RenewFileset RPC
 func (a *apiServer) RenewFileset(ctx context.Context, req *pfs.RenewFilesetRequest) (*types.Empty, error) {

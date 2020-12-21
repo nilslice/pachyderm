@@ -90,6 +90,7 @@ type driver struct {
 	openCommits    col.Collection
 
 	storage         *fileset.Storage
+	commitStore     commitStore
 	compactionQueue *work.TaskQueue
 }
 
@@ -133,6 +134,7 @@ func newDriver(env *serviceenv.ServiceEnv, txnEnv *txnenv.TransactionEnv, etcdPr
 	if err != nil {
 		return nil, err
 	}
+	d.commitStore = newKeySpaceCommitStore(d.storage)
 	go d.compactionWorker()
 	// Create spec repo (default repo)
 	repo := client.NewRepo(ppsconsts.SpecRepo)

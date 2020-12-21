@@ -41,7 +41,7 @@ func (c APIClient) deleteFile(repo, commit string, files []string, tag ...string
 // FileOperationClient is not thread safe. Multiple FileOperationClients
 // should be used for concurrent upload.
 type FileOperationClient struct {
-	client pfs.API_FileOperationClient
+	client pfs.API_CreateFilesetClient
 	fileOperationCore
 }
 
@@ -64,7 +64,7 @@ func (c APIClient) NewFileOperationClient(repo, commit string) (_ *FileOperation
 	defer func() {
 		retErr = grpcutil.ScrubGRPC(retErr)
 	}()
-	client, err := c.PfsAPIClient.FileOperation(c.Ctx())
+	client, err := c.PfsAPIClient.CreateFileset(c.Ctx())
 	if err != nil {
 		return nil, err
 	}
