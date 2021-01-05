@@ -116,18 +116,6 @@ func (a *apiServer) DeleteRepoInTransaction(txnCtx *txnenv.TransactionContext, r
 func (a *apiServer) DeleteRepo(ctx context.Context, request *pfs.DeleteRepoRequest) (response *types.Empty, retErr error) {
 	func() { a.Log(request, nil, nil, 0) }()
 	defer func(start time.Time) { a.Log(request, response, retErr, time.Since(start)) }(time.Now())
-
-	if request.SplitTransaction {
-		if err := func() error {
-			if request.All {
-				return a.driver.deleteAllSplitTransaction(a.env.GetPachClient(ctx))
-			}
-			return a.driver.deleteRepoSplitTransaction(ctx, request.Repo, request.Force)
-		}(); err != nil {
-			return nil, err
-		}
-		return &types.Empty{}, nil
-	}
 	if err := a.txnEnv.WithTransaction(ctx, func(txn txnenv.Transaction) error {
 		return txn.DeleteRepo(request)
 	}); err != nil {
